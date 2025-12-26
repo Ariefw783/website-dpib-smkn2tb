@@ -1,0 +1,523 @@
+<!DOCTYPE html> <!-- Mendeklarasikan tipe dokumen sebagai HTML5 -->
+<html lang="id"> <!-- Mengatur bahasa utama dokumen ke Bahasa Indonesia -->
+<head>
+    <meta charset="UTF-8"> <!-- Mengatur pengkodean karakter ke UTF-8 agar mendukung semua simbol -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Mengatur agar tampilan menyesuaikan lebar layar perangkat -->
+    <title>DPIB - SMKN 2 TB</title> <!-- Judul yang muncul pada tab browser -->
+    
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Roboto:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"> <!-- Mengambil font tambahan JetBrains Mono untuk jam -->
+    
+    <style>
+        :root { /* Tempat menyimpan variabel warna agar mudah diubah secara global */
+            --primary: #2c3e50;    /* Variabel warna biru tua */
+            --accent: #e67e22;     /* Variabel warna oranye aksen */
+            --highlight: #2980b9;  /* Variabel warna biru teknologi */
+            --bg-body: #fdfdfd;    /* Variabel warna latar belakang terang */
+            --bg-pattern: #f0f2f5; /* Variabel warna garis grid */
+            --text-main: #2c3e50;  /* Variabel warna teks utama */
+            --white: #ffffff;      /* Variabel warna putih */
+            --glass-border: rgba(0, 0, 0, 0.1); /* Variabel warna garis transparan */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; } /* Reset standar browser */
+
+        body {
+            font-family: 'Roboto', sans-serif; /* Mengatur font standar untuk seluruh halaman */
+            background-color: var(--bg-body); /* Menerapkan warna latar belakang */
+            background-image: 
+                linear-gradient(var(--bg-pattern) 1px, transparent 1px), /* Membuat garis horizontal grid */
+                linear-gradient(90deg, var(--bg-pattern) 1px, transparent 1px); /* Membuat garis vertikal grid */
+            background-size: 30px 30px; /* Mengatur ukuran kotak-kotak grid */
+            color: var(--text-main); /* Menerapkan warna teks */
+            overflow-x: hidden; /* Menghilangkan scrollbar ke samping */
+        }
+
+        h1, h2, h3, .nav-link { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 1px; } /* Gaya teks judul */
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #34495e 100%); 
+            border-bottom: 4px solid var(--accent); 
+            padding: 1.5rem 5%; /* Ketinggian header yang ditingkatkan */
+            position: fixed; 
+            width: 100%; 
+            top: 0; 
+            z-index: 1000; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15); 
+        }
+
+        .nav-container {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            max-width: 1400px; 
+            margin: auto; 
+        }
+
+        .header-left {
+            display: flex;
+            flex-direction: column; 
+            gap: 12px;
+        }
+
+        .logo-box { display: flex; align-items: center; gap: 15px; } 
+        .logo-img { width: 45px; height: 55px; } 
+        
+        .logo-text h1 { font-size: 1.35rem; color: var(--white); } 
+        .logo-text span { font-size: 1.35rem; color: var(--accent); font-weight: bold; display: block; } 
+
+        nav ul { display: flex; list-style: none; gap: 5px; margin-left: -15px; } 
+        nav a { 
+            color: rgba(255, 255, 255, 0.9); 
+            text-decoration: none; 
+            font-size: 0.85rem; 
+            font-weight: 700; 
+            padding: 5px 15px; 
+            transition: 0.3s; 
+        }
+        nav a:hover, nav a.active { color: var(--accent); } 
+        nav a.active { border-bottom: 2px solid var(--accent); } 
+
+        .header-status { 
+            display: flex; 
+            align-items: center;
+        }
+
+        .digital-clock-container {
+            background: #1a252f; 
+            padding: 8px 20px; 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.4);
+            border-right: 2px solid var(--accent);
+        }
+
+        .blink-box { 
+            width: 6px; 
+            height: 6px; 
+            background-color: var(--accent);
+            box-shadow: 0 0 8px var(--accent); 
+            animation: softBlink 1.5s infinite steps(1); 
+        }
+
+        #digital-clock {
+            font-family: 'JetBrains Mono', monospace; 
+            font-size: 0.85rem; 
+            font-weight: 700;
+            color: #ecf0f1; 
+            letter-spacing: 0.5px;
+        }
+
+        .page { display: none; padding-top: 210px; min-height: 100vh; animation: coolSlide 0.5s ease-out forwards; } 
+        .page.active { display: block; } 
+        
+        @keyframes coolSlide {
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        .hero {
+            height: 55vh; 
+            background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), url('hero-bg.jpg'); 
+            background-size: cover; 
+            background-position: center; 
+            display: flex; 
+            align-items: center; 
+            padding: 0 10%; 
+            border-bottom: 3px solid #ddd; 
+        }
+        .hero-content { max-width: 700px; } 
+        .hero h2 { font-size: 3.5rem; color: var(--primary); line-height: 1.1; margin-bottom: 1rem; } 
+        .hero h2 span { color: var(--accent); } 
+        
+        .btn-tech {
+            background: var(--primary); 
+            border: none; 
+            color: white; 
+            padding: 15px 35px; 
+            font-family: 'Oswald', sans-serif; 
+            font-size: 1rem; 
+            cursor: pointer; 
+            transition: 0.4s; 
+            clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%); 
+            margin-top: 10px; 
+        }
+        .btn-tech:hover { background: var(--accent); transform: translateY(-3px); } 
+
+        .container { max-width: 1200px; margin: auto; padding: 3rem 5%; } 
+        
+        .section-header { margin-bottom: 3.5rem; border-left: 8px solid var(--accent); padding-left: 20px; } 
+        .section-header h2 { font-size: 2.5rem; color: var(--primary); } 
+
+        .tech-card {
+            background: var(--white); 
+            border: 1px solid #eee; 
+            padding: 2.5rem; 
+            position: relative;
+            clip-path: polygon(0 0, 90% 0, 100% 10%, 100% 100%, 10% 100%, 0 90%);
+            box-shadow: 10px 10px 0px rgba(44, 62, 80, 0.05); 
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); 
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            min-height: 250px;
+        }
+
+        .tech-card::before { 
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 40px;
+            height: 4px;
+            background: var(--accent);
+            transition: 0.3s;
+        }
+
+        .tech-card h3 { 
+            color: var(--primary); 
+            margin-bottom: 1.2rem; 
+            font-size: 1.4rem;
+            position: relative;
+        }
+
+        .tech-card p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #666;
+        }
+
+        .tech-card:hover { 
+            border-color: var(--accent); 
+            transform: translate(-5px, -5px); 
+            box-shadow: 15px 15px 0px rgba(230, 126, 34, 0.1); 
+        }
+
+        .tech-card:hover::before {
+            width: 100%; 
+        }
+
+        .grid-karya { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; } 
+        .karya-item { position: relative; border: 4px solid var(--white); background: #eee; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1); } 
+        .karya-item img { width: 100%; height: 300px; object-fit: cover; transition: 0.5s; } 
+        .karya-item:hover img { transform: scale(1.05); } 
+        .karya-overlay { 
+            position: absolute; bottom: 0; left: 0; width: 100%; padding: 20px; 
+            background: rgba(44, 62, 80, 0.9); color: white; 
+        }
+
+        .fasilitas-tech { display: flex; align-items: center; gap: 30px; margin-bottom: 30px; background: var(--white); padding: 20px; border: 1px solid #ddd; } 
+        .fasilitas-tech img { width: 220px; height: 140px; object-fit: cover; border: 4px solid #eee; } 
+
+        .contact-wrapper { display: grid; grid-template-columns: 1fr 1.5fr; gap: 50px; } 
+        input, textarea { 
+            background: #fff; 
+            border: 1px solid #ccc; 
+            color: #333; padding: 15px; width: 100%; margin-bottom: 20px; 
+            font-family: 'Roboto'; 
+        }
+        input:focus { border-color: var(--accent); outline: none; } 
+
+        footer {
+            background: #1a252f;
+            color: #ecf0f1;
+            padding: 4rem 5% 2rem;
+            border-top: 5px solid var(--accent);
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            max-width: 1400px;
+            margin: auto;
+            text-align: left;
+        }
+        .footer-col h3 { color: var(--accent); margin-bottom: 1.5rem; font-size: 1.2rem; border-bottom: 2px solid rgba(230, 126, 34, 0.3); padding-bottom: 10px; display: inline-block; }
+        .footer-col p, .footer-col li { font-size: 0.9rem; line-height: 1.8; color: #bdc3c7; list-style: none; }
+        .footer-col ul li::before { content: "» "; color: var(--accent); }
+        .footer-bottom {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            font-size: 0.85rem;
+            color: #7f8c8d;
+        }
+
+        @keyframes softBlink {
+            0%, 49% { opacity: 0; }
+            50%, 100% { opacity: 1; }
+        }
+
+        @media (max-width: 768px) { 
+            header { padding: 1rem 3%; }
+            .nav-container { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .header-status { width: 100%; justify-content: flex-start; }
+            .digital-clock-container { padding: 6px 12px; }
+            #digital-clock { font-size: 0.7rem; }
+            .page { padding-top: 280px; }
+            .hero h2 { font-size: 2.2rem; }
+            .footer-grid { text-align: center; }
+            .footer-col h3 { border-bottom: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header> 
+        <div class="nav-container"> 
+            <div class="header-left">
+                <div class="logo-box"> 
+                    <img src="logo-smk.png" alt="Logo SMK" width="45" height="60" class="logo-img"> 
+                    <div class="logo-text"> 
+                        <h1>DESAIN PEMODELAN DAN INFORMASI BANGUNAN</h1> 
+                        <span>SMK NEGERI 2 TERBANGGI BESAR</span> 
+                    </div>
+                </div>
+                <nav> 
+                    <ul>
+                        <li><a href="#" onclick="showPage('home')" id="link-home" class="active">BERANDA</a></li>
+                        <li><a href="#" onclick="showPage('profil')" id="link-profil">PROFIL</a></li>
+                        <li><a href="#" onclick="showPage('karya')" id="link-karya">KARYA</a></li>
+                        <li><a href="#" onclick="showPage('fasilitas')" id="link-fasilitas">FASILITAS</a></li>
+                        <li><a href="#" onclick="showPage('kontak')" id="link-kontak">KONTAK</a></li>
+                    </ul>
+                </nav>
+            </div>
+            
+            <div class="header-status"> 
+                <div class="digital-clock-container">
+                    <div class="blink-box"></div> 
+                    <span id="digital-clock">00:00:00</span> 
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div id="home" class="page active"> 
+        <section class="hero"> 
+            <div class="hero-content">
+                <p style="color: var(--accent); font-weight: bold; margin-bottom: 10px;"> PROGRAM KEAHLIAN </p>
+                <h2>DESAIN PEMODELAN <span>& INFORMASI</span> BANGUNAN</h2>
+                <p style="margin-bottom: 2rem; color: #555;">Mencetak lulusan yang mahir dalam perencanaan gedung, estimasi biaya, dan pemodelan informasi bangunan (BIM) berbasis teknologi terkini.</p>
+                <button class="btn-tech" onclick="showPage('profil')">BACA PROFIL JURUSAN</button> 
+            </div>
+        </section>
+
+        <div class="container"> 
+            <div class="grid-karya"> 
+                <div class="tech-card"> 
+                    <h3>Implementasi BIM</h3> 
+                    <p>Menerapkan metode kerja digital Building Information Modeling untuk akurasi data konstruksi yang maksimal dan efisiensi proyek.</p> 
+                </div>
+                <div class="tech-card"> 
+                    <h3>Analisis Struktur</h3> 
+                    <p>Membekali siswa dengan pemahaman perhitungan kekuatan material dan ketahanan konstruksi modern sesuai standar industri.</p> 
+                </div>
+                <div class="tech-card"> 
+                    <h3>Estimasi Biaya (RAB)</h3> 
+                    <p>Pelatihan perhitungan volume pekerjaan dan analisis harga satuan untuk manajemen keuangan proyek yang efisien dan akurat.</p> 
+                </div>
+                <div class="tech-card"> 
+                    <h3>Surveying & Pemetaan</h3> 
+                    <p>Teknik pengukuran lahan presisi menggunakan Total Station dan GPS untuk validasi data tapak bangunan yang akurat secara topografi.</p> 
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="profil" class="page"> 
+        <div class="container">
+            <div class="section-header">
+                <h2>Profil Jurusan</h2>
+            </div>
+            <div class="contact-wrapper">
+                <div class="tech-card" style="min-height: auto; padding-bottom: 1.5rem;">
+                    <img src="foto-jurusan.jpg" alt="Aktivitas DPIB" width="800" height="600" style="width:100%; height: auto; margin-bottom: 20px; clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%);">
+                    <h3>Integritas & Presisi</h3>
+                    <p>DPIB SMK Negeri 2 Terbanggi Besar fokus pada pembentukan karakter teknisi yang teliti, kreatif, dan menguasai teknologi perancangan masa depan.</p>
+                    <button class="btn-tech" onclick="showPage('karya')">EKSPLORASI KARYA</button> 
+                </div>
+                <div>
+                    <h3 style="color: var(--accent); margin-bottom: 1rem;">VISI STRATEGIS</h3>
+                    <p style="margin-bottom: 2rem;">Menjadi pusat pendidikan vokasi unggulan di bidang teknik sipil dan arsitektur yang relevan dengan kebutuhan industri konstruksi 4.0.</p>
+                    <h3 style="color: var(--accent); margin-bottom: 1rem;">KOMPETENSI UTAMA</h3>
+                    <ul style="list-style: none; line-height: 2.5; color: #555;">
+                        <li>● AutoCAD Professional Drafting</li>
+                        <li>● ArchiCAD (BIM Modeling)</li>
+                        <li>● SketchUp Rendering</li>
+                        <li>● Estimasi Biaya & Manajemen Proyek</li>
+                    </ul>
+
+                    <div style="margin-top: 3rem; padding: 25px; background: #fff; border: 1px solid #eee; border-left: 5px solid var(--primary);">
+                        <h4 style="font-family: 'Oswald'; color: var(--primary); margin-bottom: 10px;">AKREDITASI & PARTNERSHIP</h4>
+                        <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">DPIB SMKN 2 TB telah terakreditasi 'A' dan menjalin kerjasama strategis dengan berbagai BUMN Konstruksi dan Konsultan Arsitektur Nasional.</p>
+                        <div style="display: flex; gap: 15px; opacity: 0.6;">
+                            <span style="background: #eee; padding: 5px 10px; font-size: 0.75rem; font-weight: bold;">[LOGO DUDI 1]</span>
+                            <span style="background: #eee; padding: 5px 10px; font-size: 0.75rem; font-weight: bold;">[LOGO DUDI 2]</span>
+                            <span style="background: #eee; padding: 5px 10px; font-size: 0.75rem; font-weight: bold;">[LOGO DUDI 3]</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div style="background: var(--primary); color: white; padding: 20px; text-align: center;">
+                            <h2 style="font-size: 2rem; color: var(--accent);">95%</h2>
+                            <p style="font-size: 0.8rem;">Lulusan Terserap Industri</p>
+                        </div>
+                        <div style="background: var(--accent); color: white; padding: 20px; text-align: center;">
+                            <h2 style="font-size: 2rem; color: white;">25+</h2>
+                            <p style="font-size: 0.8rem;">Project Portfolio Siswa</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="karya" class="page"> 
+        <div class="container">
+            <div class="section-header">
+                <h2>Galeri Proyek Siswa</h2>
+            </div>
+            <div class="grid-karya">
+                <div class="karya-item">
+                    <img src="karya-3d.jpg" alt="BIM Model" width="800" height="600">
+                    <div class="karya-overlay">
+                        <h4>Pemodelan Hunian 3D</h4>
+                        <p style="font-size: 0.85rem;">Output Rendering & BIM Modeling</p>
+                    </div>
+                </div>
+                <div class="karya-item">
+                    <img src="karya-autocad.jpg" alt="Technical Drawing" width="800" height="600">
+                    <div class="karya-overlay">
+                        <h4>Menggambar Digital</h4>
+                        <p style="font-size: 0.85rem;">Dokumentasi Teknis AutoCAD</p>
+                    </div>
+                </div>
+                <div class="karya-item">
+                    <img src="karya-maket.jpg" alt="Physical Model" width="800" height="600">
+                    <div class="karya-overlay">
+                        <h4>Prototipe Arsitektur</h4>
+                        <p style="font-size: 0.85rem;">Studi Maket & Estetika Fisik</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="fasilitas" class="page"> 
+        <div class="container">
+            <div class="section-header">
+                <h2>Fasilitas Pembelajaran</h2>
+            </div>
+            <div class="fasilitas-tech"> 
+                <img src="lab-komputer.jpg" alt="Lab CAD" width="400" height="300">
+                <div>
+                    <h3>Lab Komputer & Simulasi</h3>
+                    <p>Ruang komputasi modern dengan spesifikasi workstation tinggi untuk rendering dan analisis struktur.</p>
+                </div>
+            </div>
+            <div class="fasilitas-tech"> 
+                <img src="studio-gambar.jpg" alt="Studio" width="400" height="300">
+                <div>
+                    <h3>Studio Perancangan</h3>
+                    <p>Studio untuk melatih kemampuan dasar sketsa arsitektur dan pengembangan ide desain kreatif.</p>
+                </div>
+            </div>
+            <div class="fasilitas-tech"> 
+                <img src="perpustakaan.jpg" alt="Perpustakaan Teknik" width="400" height="300">
+                <div>
+                    <h3>Perpustakaan Teknik & Literasi</h3>
+                    <p>Koleksi lengkap buku referensi arsitektur, standar teknik (SNI), dan modul pembelajaran konstruksi digital terbaru.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="kontak" class="page"> 
+        <div class="container">
+            <div class="section-header">
+                <h2>CONTACT US</h2>
+            </div>
+            <div class="contact-wrapper">
+                <div>
+                    <h3 style="color: var(--accent);">Pusat Informasi</h3>
+                    <br>
+                    <p><strong>Telepon:</strong> 0725-123456</p>
+                    <p><strong>Lokasi:</strong> Terbanggi Besar, Lampung Tengah</p>
+                    <p><strong>Email:</strong> dpib@smkn2terbanggibesar.sch.id</p>
+                </div>
+                <form>
+                    <input type="text" placeholder="Nama Lengkap">
+                    <input type="email" placeholder="Email Kontak">
+                    <textarea rows="5" placeholder="Pesan atau Pertanyaan Anda..."></textarea>
+                    <button class="btn-tech" type="button">KIRIM PESAN</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer> 
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>Tentang DPIB</h3>
+                <p>Program Keahlian Desain Pemodelan dan Informasi Bangunan SMKN 2 Terbanggi Besar adalah pusat keunggulan vokasi dalam teknologi rancang bangun digital.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li>PPDB Online</li>
+                    <li>Sistem Informasi Sekolah</li>
+                    <li>Layanan Alumni</li>
+                    <li>Agenda Kegiatan</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Hubungi Kami</h3>
+                <p>Jl. Negara KM. 123, Terbanggi Besar,<br>Lampung Tengah, 34163</p>
+                <p>Telp: (0725) 123456<br>Email: dpib@smkn2tb.sch.id</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 DESAIN PEMODELAN DAN INFORMASI BANGUNAN - SMK NEGERI 2 TERBANGGI BESAR. All Rights Reserved.
+        </div>
+    </footer>
+
+    <script>
+        function showPage(pageId) { 
+            const pages = document.querySelectorAll('.page'); 
+            pages.forEach(p => p.classList.remove('active')); 
+
+            document.getElementById(pageId).classList.add('active'); 
+
+            const links = document.querySelectorAll('nav a'); 
+            links.forEach(l => l.classList.remove('active')); 
+            document.getElementById('link-' + pageId).classList.add('active'); 
+
+            window.scrollTo(0,0); 
+        }
+
+        function updateClock() {
+            const now = new Date();
+            const days = ['MIN', 'SEN', 'SEL', 'RAB', 'KAM', 'JUM', 'SAB'];
+            const months = ['JAN', 'FEB', 'MAR', 'APR', 'MEI', 'JUN', 'JUL', 'AGU', 'SEP', 'OKT', 'NOV', 'DES'];
+            
+            const dayName = days[now.getDay()];
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = months[now.getMonth()];
+            const year = now.getFullYear();
+            
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            const timeString = `${dayName} | ${day}-${month}-${year} | ${hours}:${minutes}:${seconds}`;
+            document.getElementById('digital-clock').textContent = timeString;
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>
